@@ -106,3 +106,19 @@ sim_results_df |>
 ```
 ## As shown on plot, when we increase the effect size (difference between the true population mean and null hypothesis mean), we perceive a higher power of the statistical test. On the contrary, as we decreases the effect size, lower power or smaller statistical difference can be found.
 
+
+```{r}
+sim_results_df |> 
+  filter(p_value < alpha) |> 
+  group_by(true_mu) |> 
+  summarise(avg_estimate_reject  = mean(estimated_mu)) |> 
+  ggplot(aes(x=true_mu, y = avg_estimate_reject)) +
+  geom_line() +
+  labs(title = "Estimated mu in Rejected and True Value of mu",
+       x = "True Value of mean",
+       y = "Average estimate mu (rejected)") 
+```
+
+
+
+
