@@ -20,7 +20,7 @@ library(rvest)
 file_names = list.files("data")
 
 combined_df = map_df(file_names, ~{
-  df = read_csv(file.path("data", .x))
+  df = read_csv(file.path("data", .x), show_col_types = FALSE)
   
   subject_id = str_extract(.x, "\\d+")
   
@@ -33,6 +33,23 @@ combined_df = map_df(file_names, ~{
   
 })
 
+```
+
+
+```{r spaghetti plot}
+
+combined_df |> 
+      pivot_longer(week_1:week_8,
+                 names_to = "week",
+                 names_prefix = "week_" ,
+                 values_to = "observation") |> 
+  ggplot(aes(x=week,y= observation, group=subject_id, color=arm)) +
+  geom_line() + 
+  facet_grid(. ~arm) +
+  labs(title = "Spaghetti Plot of Observations Over Time",
+       x = "Week",
+       y = "Observation") 
 
 ```
+
 
