@@ -107,7 +107,18 @@ sim_results_df |>
 ## As shown on plot, when we increase the effect size (difference between the true population mean and null hypothesis mean), we perceive a higher power of the statistical test. On the contrary, as we decreases the effect size, lower power or smaller statistical difference can be found.
 
 
-```{r}
+```{r plot of estimate mu and true mu}
+sim_results_df |> 
+  group_by(true_mu) |> 
+  summarise(avg_estimate_reject  = mean(estimated_mu)) |> 
+  ggplot(aes(x=true_mu, y = avg_estimate_reject)) +
+  geom_line() +
+  labs(title = "Estimated mu i and True Value of mu",
+       x = "True Value of mean",
+       y = "Average estimate mu") 
+```
+
+```{r plot of estimate mu (rejected) and true mu}
 sim_results_df |> 
   filter(p_value < alpha) |> 
   group_by(true_mu) |> 
@@ -118,7 +129,7 @@ sim_results_df |>
        x = "True Value of mean",
        y = "Average estimate mu (rejected)") 
 ```
-
+## Comments: based on the graph, the estimated mu in rejected samples is necessarily equal to the true population mean. There are several reasons attribute to that. One of that was that the generated samples are subject to random sampling variability, thus it is possible to generate samples with different estimated mean. Additionally, it is important to note that we calcualte the average estimate of mean in samples where null hypothesis is rejected. In this casem we are more likely to overestimate the true effect size.
 
 
 
