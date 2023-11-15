@@ -10,6 +10,7 @@ output: github_document
 library(tidyverse)
 library(ggridges)
 library(rvest)
+library(broom)
 
 ```
 
@@ -52,4 +53,37 @@ combined_df |>
 
 ```
 ### Comments: In the experiment arm , we did perceive a increasing trend from week 1 to week8, whereas for control group, there appears to have difference between week1 and week8 in the end. 
+
+## Problem 3
+```{r}
+set.seed(1)
+
+list_mu = c (0, 1, 2, 3, 4, 5)
+
+gather_test_results = function(mu) {
+
+  n = 30
+  sigma = 5
+  alpha = 0.05
+  
+  simulated_data = replicate(5000, rnorm(n=n, mean=mu, sd=sigma))
+  
+  test_results = map_dfr(simulated_data, ~tidy(t.test(.x, mu=0)))
+  
+  power_results = mean(test_results$p.value < 0.05)
+  
+  avg_mu = mean(test_results$estimate)
+  
+  avg_mu_reject = mean(test_results[test_results$p.value < 0.05]$estimate)
+  
+  return(tibble(
+    true_mu = mu,
+    power_results = power_results,
+    avg_mu = avg_mu,
+    avg_mu_reject = avg_mu_reject
+  ))
+}
+
+
+```
 
